@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Single File Page</title>
+    <style>
+        /* CSS: This handles the look and feel */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a2e;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Prevents scrollbars during explosions */
+            cursor: pointer;
+        }
+
+        .instruction {
+            text-align: center;
+            pointer-events: none; /* Let clicks pass through to the body */
+            user-select: none;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 10px #00d2ff;
+        }
+
+        /* The style for each confetti piece */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instruction">
+        <h1>CLICK ANYWHERE</h1>
+        <p>to start the party</p>
+    </div>
+
+    <script>
+        // JavaScript: This handles the "fun" logic
+        document.addEventListener('click', (e) => {
+            const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa500', '#eccc68'];
+            
+            // Create 30 tiny squares per click
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('confetti');
+                
+                // Random color from our list
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Position at the mouse click
+                particle.style.left = e.clientX + 'px';
+                particle.style.top = e.clientY + 'px';
+                
+                document.body.appendChild(particle);
+
+                // Calculate a random direction for the explosion
+                const destinationX = (Math.random() - 0.5) * 400;
+                const destinationY = (Math.random() - 0.5) * 400;
+
+                // Use the Web Animations API to make it move
+                const animation = particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                    delay: Math.random() * 100
+                });
+
+                // Remove the element from the page once it's done
+                animation.onfinish = () => particle.remove();
+            }
+        });
+    </script>
+
+</body>
+</html>
